@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secure Digital Online Voting System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="page-shell">
+    <header class="hero-card">
+      <div>
+        <p class="eyebrow">Election Integrity Platform</p>
+        <h1>Secure Digital Online Voting System</h1>
+        <p class="hero-copy">
+          A front-end prototype built with HTML, CSS, and JavaScript featuring voter registration,
+          webcam-based face verification, one-person-one-vote protection, and live results.
+        </p>
+      </div>
+      <div class="hero-badges">
+        <span>Voter ID Check</span>
+        <span>Face Match Check</span>
+        <span>Encrypted Session Demo</span>
+      </div>
+    </header>
+
+    <section class="overview-grid" aria-label="Election overview">
+      <article class="metric-card">
+        <span class="metric-label">Registered Voters</span>
+        <strong id="registeredCount">0</strong>
+      </article>
+      <article class="metric-card">
+        <span class="metric-label">Ballots Cast</span>
+        <strong id="ballotsCount">0</strong>
+      </article>
+      <article class="metric-card">
+        <span class="metric-label">Turnout</span>
+        <strong id="turnoutRate">0%</strong>
+      </article>
+      <article class="metric-card">
+        <span class="metric-label">System Status</span>
+        <strong id="systemState">Secure Idle</strong>
+      </article>
+    </section>
+
+    <main class="grid-layout">
+      <section class="panel panel-register">
+        <div class="panel-title">
+          <h2>Voter Registration</h2>
+          <p>Create a voter profile and store a face reference securely in this browser.</p>
+        </div>
+
+        <form id="registerForm" class="form-stack">
+          <label>
+            <span>Full Name</span>
+            <input type="text" id="regName" placeholder="Enter voter name" required>
+          </label>
+          <label>
+            <span>National ID</span>
+            <input type="text" id="regVoterId" placeholder="Unique voter ID" required>
+          </label>
+          <label>
+            <span>Email Address</span>
+            <input type="email" id="regEmail" placeholder="name@example.com" required>
+          </label>
+
+          <div class="camera-card">
+            <div class="camera-stage">
+              <video id="registerVideo" autoplay playsinline muted></video>
+              <canvas id="registerCanvas" width="320" height="240" hidden></canvas>
+            </div>
+            <div class="face-preview-row">
+              <div class="face-preview-card">
+                <span>Stored Face Reference</span>
+                <img id="registerSnapshot" alt="Stored registration face reference">
+              </div>
+            </div>
+            <div class="camera-actions">
+              <button type="button" class="secondary-btn" id="registerCameraBtn">Start Camera</button>
+              <button type="button" class="secondary-btn" id="captureFaceBtn">Capture Face</button>
+            </div>
+            <p id="registerFaceStatus" class="helper-text">No face enrolled yet.</p>
+          </div>
+
+          <button type="submit" class="primary-btn">Register Voter</button>
+        </form>
+      </section>
+
+      <section class="panel panel-auth">
+        <div class="panel-title">
+          <h2>Voter Verification</h2>
+          <p>Enter the voter ID and verify identity using a fresh webcam image before voting.</p>
+        </div>
+
+        <form id="loginForm" class="form-stack">
+          <label>
+            <span>National ID</span>
+            <input type="text" id="loginVoterId" placeholder="Enter voter ID" required>
+          </label>
+          <button type="submit" class="primary-btn">Start Verification</button>
+        </form>
+
+        <div class="camera-card compact">
+          <div class="camera-stage">
+            <video id="verifyVideo" autoplay playsinline muted></video>
+            <canvas id="verifyCanvas" width="320" height="240" hidden></canvas>
+          </div>
+          <div class="face-preview-row">
+            <div class="face-preview-card">
+              <span>Live Verification Snapshot</span>
+              <img id="verifySnapshot" alt="Latest verification face snapshot">
+            </div>
+            <div class="face-preview-card face-checklist">
+              <span>Verification Checklist</span>
+              <ul>
+                <li>Look directly at the camera</li>
+                <li>Keep your face well lit</li>
+                <li>Remove strong glare if possible</li>
+              </ul>
+            </div>
+          </div>
+          <div class="camera-actions">
+            <button type="button" class="secondary-btn" id="verifyCameraBtn">Start Verification Camera</button>
+            <button type="button" class="secondary-btn" id="verifyFaceBtn">Verify Face</button>
+          </div>
+          <p id="verifyFaceStatus" class="helper-text">Face verification pending.</p>
+        </div>
+
+        <div class="status-board">
+          <div>
+            <span class="status-label">Authenticated Voter</span>
+            <strong id="currentVoterName">None</strong>
+          </div>
+          <div>
+            <span class="status-label">Session State</span>
+            <strong id="sessionState">Not Authenticated</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel panel-ballot">
+        <div class="panel-title">
+          <h2>Digital Ballot</h2>
+          <p>Voting is enabled only after voter lookup and face authentication both succeed.</p>
+        </div>
+
+        <form id="voteForm" class="ballot-options">
+          <label class="candidate-card">
+            <input type="radio" name="candidate" value="Asha Patel" required>
+            <span>Asha Patel</span>
+            <small>Transparency and voter access</small>
+          </label>
+          <label class="candidate-card">
+            <input type="radio" name="candidate" value="Michael Stone" required>
+            <span>Rahul Gandhi</span>
+            <small>Infrastructure and civic digitization</small>
+          </label>
+          <label class="candidate-card">
+            <input type="radio" name="candidate" value="Narendra Modi" required>
+            <span>Narendra Modi</span>
+            <small>Security, privacy, and public trust</small>
+          </label>
+
+          <button type="submit" class="primary-btn" id="castVoteBtn" disabled>Cast Secure Vote</button>
+        </form>
+
+        <div class="security-note">
+          <h3>Security Controls in This Demo</h3>
+          <ul>
+            <li>Stored face reference and live face capture comparison</li>
+            <li>Single vote restriction per voter ID</li>
+            <li>Session reset after successful vote</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="panel panel-results">
+        <div class="panel-title">
+          <h2>Election Results</h2>
+          <p>Results update live as votes are cast in this local prototype.</p>
+        </div>
+
+        <div id="resultsList" class="results-list"></div>
+        <button type="button" class="ghost-btn" id="resetDemoBtn">Reset Demo Data</button>
+      </section>
+    </main>
+
+    <section class="panel panel-log">
+      <div class="panel-title">
+        <h2>System Activity</h2>
+        <p>Operational status messages for registration, authentication, and ballot actions.</p>
+      </div>
+      <div id="activityLog" class="activity-log"></div>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
